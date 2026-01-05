@@ -1,20 +1,45 @@
 import './App.css'
 import Dog from './components/Dog'
 import { Canvas } from '@react-three/fiber'
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 
 function App() {
   const [isPlaying, setIsPlaying] = useState(false)
+  const startedRef=useRef(false)
   const audioRef = useRef(null)
 
-  const togglePlayPause = () => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause()
-      } else {
-        audioRef.current.play()
+  useEffect(() => {
+    const startAudioOnce = () => {
+      if (!startedRef.current && audioRef.current) {
+        audioRef.current
+          .play()
+          .then(() => {
+            setIsPlaying(true)
+            startedRef.current = true
+          })
+          .catch(() => {})
       }
-      setIsPlaying(!isPlaying)
+      window.removeEventListener('click', startAudioOnce)
+      window.removeEventListener('keydown', startAudioOnce)
+    }
+
+    window.addEventListener('click', startAudioOnce)
+    window.addEventListener('keydown', startAudioOnce)
+
+    return () => {
+      window.removeEventListener('click', startAudioOnce)
+      window.removeEventListener('keydown', startAudioOnce)
+    }
+  }, [])
+
+  const togglePlayPause = () => {
+    if (!audioRef.current) return
+    if (isPlaying) {
+      audioRef.current.pause()
+      setIsPlaying(false)
+    } else {
+      audioRef.current.play()
+      setIsPlaying(true)
     }
   }
 
@@ -137,24 +162,20 @@ function App() {
         <section id='section-3' ></section>
         
         {/* Audio element */}
-        <audio 
-          ref={audioRef} 
-          src="/music/music.mp3" 
-          loop
-          onEnded={() => setIsPlaying(false)}
-        />
-        <div className="music-player">
-          <button 
-            className={`play-pause-btn ${isPlaying ? 'playing' : ''}`}
-            onClick={togglePlayPause}
-            aria-label={isPlaying ? 'Pause' : 'Play'}
-          >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="12" cy="12" r="10" stroke="white" strokeWidth="1" fill="none"/>
-              <circle cx="12" cy="12" r="4" fill="white"/>
-            </svg>
-          </button>
-        </div>
+        <audio ref={audioRef} src="/music/music.mp3" loop preload="auto" />
+
+      {/* MUSIC BUTTON */}
+      <div className="music-player">
+        <button
+          className={`play-pause-btn ${isPlaying ? 'playing' : ''}`}
+          onClick={togglePlayPause}
+        >
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" stroke="white" fill="none" />
+            <circle cx="12" cy="12" r="4" fill="white" />
+          </svg>
+        </button>
+      </div>
       </main>
     </>
   )

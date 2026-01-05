@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import * as THREE from "three"
-import { Canvas, useThree } from '@react-three/fiber'
-import { OrbitControls, useGLTF, useTexture, useAnimations } from '@react-three/drei'
+import { useThree } from '@react-three/fiber'
+import {  useGLTF, useTexture, useAnimations } from '@react-three/drei'
 import gsap from "gsap";
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -52,26 +52,13 @@ const Dog = () => {
         mat13,
         mat19,
     ] = (useTexture([
-        "/matcap/mat-1.png",
         "/matcap/mat-2.png",
-        "/matcap/mat-3.png",
-        "/matcap/mat-4.png",
-        "/matcap/mat-5.png",
-        "/matcap/mat-6.png",
-        "/matcap/mat-7.png",
         "/matcap/mat-8.png",
         "/matcap/mat-9.png",
         "/matcap/mat-10.png",
-        "/matcap/mat-11.png",
         "/matcap/mat-12.png",
         "/matcap/mat-13.png",
-        "/matcap/mat-14.png",
-        "/matcap/mat-15.png",
-        "/matcap/mat-16.png",
-        "/matcap/mat-17.png",
-        "/matcap/mat-18.png",
         "/matcap/mat-19.png",
-        "/matcap/mat-20.png",
     ])).map(texture => {
         texture.colorSpace = THREE.SRGBColorSpace
         return texture
